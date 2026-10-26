@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Bitelo — Monitor de Metas</title>
+  <meta name="description" content="Acompanhamento pessoal de peso, dieta, treino e check-in diário. Funciona offline.">
+  <meta name="theme-color" content="#05070d">
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Bitelo">
+
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="hud-header">
+    <div class="hud-header__inner">
+      <div class="brand">
+        <div class="brand__logo" aria-hidden="true">B</div>
+        <div>
+          <h1 class="brand__title">BITELO</h1>
+          <p class="brand__sub">Meta 100 kg · até 31/01/2027</p>
+        </div>
+      </div>
+      <span class="pill">100% NO APARELHO</span>
+    </div>
+  </header>
+
+  <main class="app">
+    <!-- RESUMO (sempre visível) -->
+    <section class="card card--hero" aria-labelledby="heroTitle">
+      <div class="hero">
+        <div>
+          <p class="eyebrow" id="heroTitle">Evolução de peso</p>
+          <div class="hero__weight">
+            <span class="hero__value" id="dashCurrentWeight">123,0</span>
+            <span class="hero__unit">kg atual</span>
+          </div>
+          <div class="hero__meta">
+            <span>Inicial <strong>123 kg</strong></span>
+            <span>•</span>
+            <span>Meta <strong class="text-emerald">100 kg</strong></span>
+          </div>
+        </div>
+
+        <div>
+          <div class="progress-meta" style="margin:0 0 8px">
+            <span>Progresso geral</span>
+            <strong id="dashProgressPct">0,0%</strong>
+          </div>
+          <div class="progress" role="progressbar" aria-label="Progresso geral" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress__bar" id="dashProgressBar"></div>
+          </div>
+          <div class="progress-meta">
+            <span id="dashRemaining">Faltam 23,0 kg</span>
+            <span class="text-cyan" id="dashDaysRemaining">—</span>
+          </div>
+
+          <div class="kpis">
+            <div class="kpi">
+              <span class="kpi__label">Média 7 registros</span>
+              <span class="kpi__value" id="dashAverage">—</span>
+            </div>
+            <div class="kpi">
+              <span class="kpi__label">Ritmo ideal</span>
+              <span class="kpi__value">1,0 kg/sem</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ribbon" aria-label="Resumo de hoje">
+        <div class="ribbon-item">
+          <span class="ribbon-label">Calorias</span>
+          <span class="ribbon-value" id="ribbonKcal">0 / 2300</span>
+        </div>
+        <div class="ribbon-item">
+          <span class="ribbon-label">Proteína</span>
+          <span class="ribbon-value text-emerald" id="ribbonProt">0g / 220g</span>
+        </div>
+        <div class="ribbon-item">
+          <span class="ribbon-label">Água</span>
+          <span class="ribbon-value text-muted" id="ribbonWater">0 / 4 L</span>
+        </div>
+        <div class="ribbon-item">
+          <span class="ribbon-label">Cardio</span>
+          <span class="ribbon-value text-muted" id="ribbonCardio">Pendente</span>
+        </div>
+        <div class="ribbon-item">
+          <span class="ribbon-label">Musculação</span>
+          <span class="ribbon-value text-amber" id="ribbonGym">Pendente</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW: CHECK-IN & DIETA -->
+    <section data-view="checkin" class="stack" style="margin-top:20px">
+      <div class="card">
+        <div class="section-title">
+          <h2>Check-in diário <span class="muted" id="trackerDateLabel" style="font-weight:500;font-size:13px">· Hoje</span></h2>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="date" id="trackerDate" class="input input--sm" style="width:auto" aria-label="Data do check-in">
+            <button class="btn btn--ghost btn--sm" id="btnToday" type="button">Hoje</button>
+          </div>
+        </div>
+
+        <ul class="toggle-list">
+          <li>
+            <label class="toggle-item">
+              <span class="toggle-item__info">
+                <span class="toggle-item__icon text-amber">🏋️</span>
+                <span><strong>Musculação</strong><small>Treino de força (45–60 min)</small></span>
+              </span>
+              <input type="checkbox" class="check" id="chk-gym">
+            </label>
+          </li>
+          <li>
+            <label class="toggle-item">
+              <span class="toggle-item__info">
+                <span class="toggle-item__icon text-violet">🏃</span>
+                <span><strong>Cardio</strong><small>45–50 min · inclinação 3–6% · ~130 bpm</small></span>
+              </span>
+              <input type="checkbox" class="check" id="chk-cardio">
+            </label>
+          </li>
+          <li class="water-card">
+            <div class="water-card__head">
+              <div class="toggle-item__info">
+                <span class="toggle-item__icon text-cyan">💧</span>
+                <span><strong>Água</strong><small>Meta diária de hidratação</small></span>
+              </div>
+              <div class="water-card__value">
+                <span id="waterValue">0 L</span>
+                <small id="waterTarget">de 4 L</small>
+              </div>
+            </div>
+            <div class="progress progress--thin"><div class="progress__bar progress__bar--cyan" id="waterBar"></div></div>
+            <div class="water-actions">
+              <button class="btn btn--ghost btn--sm" type="button" data-water-add="-250">−250 ml</button>
+              <button class="btn btn--primary btn--sm" type="button" data-water-add="250">+250 ml</button>
+              <button class="btn btn--primary btn--sm" type="button" data-water-add="500">+500 ml</button>
+            </div>
+            <p class="water-done text-cyan" id="waterDone" hidden>Meta de água batida ✓</p>
+          </li>
+          <li>
+            <label class="toggle-item">
+              <span class="toggle-item__info">
+                <span class="toggle-item__icon text-emerald">🚫</span>
+                <span><strong>Zero açúcar refinado e álcool</strong><small>Foco no déficit calórico</small></span>
+              </span>
+              <input type="checkbox" class="check" id="chk-clean">
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2>Dieta & macros</h2>
+          <span class="muted" style="font-size:12px">Meta 2300 kcal</span>
+        </div>
+
+        <div class="macros">
+          <div class="macro"><span class="macro__label">KCAL</span><span class="macro__value" id="sumKcal">0kcal</span><span class="macro__target">/ 2300</span></div>
+          <div class="macro"><span class="macro__label text-emerald">PROT</span><span class="macro__value text-emerald" id="sumProt">0g</span><span class="macro__target">/ 220g</span></div>
+          <div class="macro"><span class="macro__label text-cyan">CARB</span><span class="macro__value text-cyan" id="sumCarb">0g</span><span class="macro__target">/ 180g</span></div>
+          <div class="macro"><span class="macro__label text-amber">GORD</span><span class="macro__value text-amber" id="sumFat">0g</span><span class="macro__target">/ 60g</span></div>
+        </div>
+        <div class="kcal-bar"><span id="macroKcalBar"></span></div>
+
+        <form id="mealForm" class="stack" style="gap:10px;margin-top:16px" autocomplete="off">
+          <div class="field">
+            <label for="mealDesc">Refeição</label>
+            <input class="input" id="mealDesc" maxlength="120" placeholder="Ex.: Frango grelhado com arroz" required>
+          </div>
+          <div class="form-row form-row--4">
+            <div class="field"><label for="mealKcal">Kcal</label><input class="input" id="mealKcal" inputmode="decimal" placeholder="0"></div>
+            <div class="field"><label for="mealProt">Prot (g)</label><input class="input" id="mealProt" inputmode="decimal" placeholder="0"></div>
+            <div class="field"><label for="mealCarb">Carb (g)</label><input class="input" id="mealCarb" inputmode="decimal" placeholder="0"></div>
+            <div class="field"><label for="mealFat">Gord (g)</label><input class="input" id="mealFat" inputmode="decimal" placeholder="0"></div>
+          </div>
+          <button class="btn btn--primary btn--block" type="submit">+ Adicionar refeição</button>
+        </form>
+
+        <ul class="meal-list" id="mealList" aria-live="polite"></ul>
+      </div>
+    </section>
+
+    <!-- VIEW: TREINO -->
+    <section data-view="workout" class="card" hidden style="margin-top:20px">
+      <div class="section-title">
+        <h2>Divisão de treino · 5x/semana</h2>
+        <span class="muted" style="font-size:12px">Carga alta em déficit</span>
+      </div>
+
+      <div class="day-selector" role="group" aria-label="Dia do treino">
+        <button class="day-btn" type="button" data-workout-day="0">Seg</button>
+        <button class="day-btn" type="button" data-workout-day="1">Ter</button>
+        <button class="day-btn" type="button" data-workout-day="2">Qua</button>
+        <button class="day-btn" type="button" data-workout-day="3">Qui</button>
+        <button class="day-btn" type="button" data-workout-day="4">Sex</button>
+        <button class="day-btn" type="button" data-workout-day="5">Sáb/Dom</button>
+      </div>
+
+      <div class="plan-head">
+        <div>
+          <p class="plan-head__day" id="workoutDayTitle">SEGUNDA-FEIRA</p>
+          <p class="plan-head__focus" id="workoutDayFocus">—</p>
+        </div>
+        <span class="badge" id="workoutCount">—</span>
+      </div>
+
+      <ul class="exercise-list" id="exerciseList"></ul>
+    </section>
+
+    <!-- VIEW: PESO & GRÁFICO -->
+    <section data-view="weight" class="grid grid--2" hidden style="margin-top:20px">
+      <div class="card">
+        <div class="section-title"><h2>Registrar pesagem</h2></div>
+        <form id="weightForm" class="weight-form">
+          <div class="form-row">
+            <div class="field"><label for="weightDate">Data</label><input class="input" type="date" id="weightDate" required></div>
+            <div class="field"><label for="weightValue">Peso (kg)</label><input class="input" id="weightValue" inputmode="decimal" placeholder="ex.: 121,5" required></div>
+          </div>
+          <button class="btn btn--primary btn--block" type="submit">Salvar pesagem</button>
+        </form>
+
+        <p class="eyebrow" style="margin-top:20px">Histórico</p>
+        <ul class="weight-list" id="weightHistory"></ul>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2>Curva de perda de peso</h2>
+          <span class="muted" style="font-size:12px">Meta ~1 kg/sem</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="weightChart" role="img" aria-label="Gráfico de evolução do peso"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW: DICAS -->
+    <section data-view="tips" class="grid grid--2" hidden style="margin-top:20px">
+      <article class="card tip-card">
+        <div class="tip-icon text-emerald">🍗</div>
+        <h3>Proteína e massa magra</h3>
+        <p>Mire em <strong>2,0 a 2,2 g de proteína por kg</strong> de peso-alvo (~220 g/dia). Proteína alta ajuda a preservar músculo durante o déficit.</p>
+      </article>
+
+      <article class="card tip-card">
+        <div class="tip-icon text-violet">🏃</div>
+        <h3>Cardio na esteira inclinada</h3>
+        <p><strong>45 a 50 min</strong>, inclinação 3–6%, 4,5–5,5 km/h. Impacto baixo protege os joelhos com o peso inicial.</p>
+      </article>
+
+      <article class="card tip-card">
+        <div class="tip-icon text-cyan">💧</div>
+        <h3>Hidratação consistente</h3>
+        <p>Distribua <strong>4 litros ao longo do dia</strong>, não tudo de uma vez. Ajuda na saciedade e no desempenho do treino.</p>
+      </article>
+
+      <article class="card tip-card">
+        <div class="tip-icon text-amber">🍚</div>
+        <h3>Refeed programado</h3>
+        <p>A cada 1–2 semanas de déficit, uma refeição com carboidratos limpos (arroz, batata, aveia) pode <strong>melhorar a adesão</strong> à dieta e o rendimento no treino.</p>
+        <p>Evidência sobre "reativar tireoide e leptina" é limitada; não é garantia de queima de gordura.</p>
+      </article>
+
+      <p class="disclaimer" style="grid-column:1/-1">
+        Conteúdo informativo, não substitui acompanhamento de nutricionista ou médico. Antes de mudanças grandes na dieta ou no treino, converse com um profissional.
+      </p>
+    </section>
+
+    <!-- VIEW: AJUSTES -->
+    <section data-view="settings" class="stack" hidden style="margin-top:20px">
+      <div class="card">
+        <div class="section-title"><h2>Aplicativo</h2></div>
+        <div class="setting-row">
+          <div>
+            <strong>Instalar no aparelho</strong>
+            <small id="installNote">Abre em tela cheia, sem barra do navegador.</small>
+          </div>
+          <button class="btn btn--primary btn--sm" id="btnInstall" type="button" hidden>Instalar</button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>iPhone (Safari)</strong>
+            <small>Compartilhar → "Adicionar à Tela de Início".</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><h2>Dados & backup</h2></div>
+        <div class="setting-row">
+          <div>
+            <strong>Armazenamento local</strong>
+            <small id="storageInfo">—</small>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Exportar backup (JSON)</strong>
+            <small>Guarde em nuvem ou e-mail. Recomendado semanalmente.</small>
+          </div>
+          <button class="btn btn--ghost btn--sm" id="btnExport" type="button">Exportar</button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Importar backup</strong>
+            <small>Substitui os dados atuais deste aparelho.</small>
+          </div>
+          <label class="btn btn--ghost btn--sm" style="cursor:pointer">
+            Importar
+            <input type="file" id="fileImport" accept="application/json,.json" hidden>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><h2>Zona de risco</h2></div>
+        <div class="setting-row">
+          <div>
+            <strong>Apagar todos os registros</strong>
+            <small>Ação irreversível neste aparelho.</small>
+          </div>
+          <button class="btn btn--danger btn--sm" id="btnReset" type="button">Apagar tudo</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- NAVEGAÇÃO INFERIOR -->
+  <nav class="tabbar" aria-label="Navegação principal">
+    <div class="tabbar__inner" role="tablist">
+      <button class="tab-btn is-active" role="tab" type="button" data-view-btn="checkin" aria-selected="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>
+        Check-in
+      </button>
+      <button class="tab-btn" role="tab" type="button" data-view-btn="workout" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/></svg>
+        Treino
+      </button>
+      <button class="tab-btn" role="tab" type="button" data-view-btn="weight" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/></svg>
+        Peso
+      </button>
+      <button class="tab-btn" role="tab" type="button" data-view-btn="tips" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5z"/></svg>
+        Dicas
+      </button>
+      <button class="tab-btn" role="tab" type="button" data-view-btn="settings" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>
+        Ajustes
+      </button>
+    </div>
+  </nav>
+
+  <div class="toast-host" id="toastHost" aria-live="polite"></div>
+
+  <script src="vendor/chart.umd.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

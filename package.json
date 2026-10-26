@@ -1,0 +1,10 @@
+{
+  "name": "bitelo-pwa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bitelo — monitor pessoal de metas (PWA, vanilla JS, offline-first)",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "chart.js": "4.4.1"
+  }
+}
