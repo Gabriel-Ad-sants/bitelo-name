@@ -20,13 +20,11 @@
   <header class="hud-header">
     <div class="hud-header__inner">
       <div class="brand">
-        <div class="brand__logo" aria-hidden="true">B</div>
         <div>
-          <h1 class="brand__title">BITELO</h1>
-          <p class="brand__sub">Meta 100 kg · até 31/01/2027</p>
+          <h1 class="brand__title">Bitelo</h1>
+          <p class="brand__sub">Meta de 100 kg até 31/01/2027</p>
         </div>
       </div>
-      <span class="pill">100% NO APARELHO</span>
     </div>
   </header>
 
@@ -34,43 +32,44 @@
     <!-- RESUMO (sempre visível) -->
     <section class="card card--hero" aria-labelledby="heroTitle">
       <div class="hero">
-        <div>
-          <p class="eyebrow" id="heroTitle">Evolução de peso</p>
+        <div class="hero__info">
+          <p class="eyebrow" id="heroTitle">Peso atual</p>
           <div class="hero__weight">
             <span class="hero__value" id="dashCurrentWeight">123,0</span>
-            <span class="hero__unit">kg atual</span>
+            <span class="hero__unit">kg</span>
           </div>
           <div class="hero__meta">
-            <span>Inicial <strong>123 kg</strong></span>
-            <span>•</span>
+            <span>Início <strong>123 kg</strong></span>
             <span>Meta <strong class="text-emerald">100 kg</strong></span>
           </div>
         </div>
 
-        <div>
-          <div class="progress-meta" style="margin:0 0 8px">
-            <span>Progresso geral</span>
-            <strong id="dashProgressPct">0,0%</strong>
-          </div>
-          <div class="progress" role="progressbar" aria-label="Progresso geral" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress__bar" id="dashProgressBar"></div>
-          </div>
-          <div class="progress-meta">
-            <span id="dashRemaining">Faltam 23,0 kg</span>
-            <span class="text-cyan" id="dashDaysRemaining">—</span>
-          </div>
-
-          <div class="kpis">
-            <div class="kpi">
-              <span class="kpi__label">Média 7 registros</span>
-              <span class="kpi__value" id="dashAverage">—</span>
-            </div>
-            <div class="kpi">
-              <span class="kpi__label">Ritmo ideal</span>
-              <span class="kpi__value">1,0 kg/sem</span>
-            </div>
+        <div class="ring-wrap" role="img" aria-label="Progresso geral da meta">
+          <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="ring__track" cx="60" cy="60" r="52"/>
+            <circle class="ring__bar" id="ringBar" cx="60" cy="60" r="52" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>
+          </svg>
+          <div class="ring__center">
+            <strong id="dashProgressPct">0%</strong>
+            <small>da meta</small>
           </div>
         </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <span class="kpi__label">Média (7 registros)</span>
+          <span class="kpi__value" id="dashAverage">—</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi__label">Ritmo ideal</span>
+          <span class="kpi__value">1,0 kg/sem</span>
+        </div>
+      </div>
+
+      <div class="hero__footer">
+        <span id="dashRemaining">Faltam 23,0 kg</span>
+        <span class="text-cyan" id="dashDaysRemaining">—</span>
       </div>
 
       <div class="ribbon" aria-label="Resumo de hoje">
@@ -80,7 +79,7 @@
         </div>
         <div class="ribbon-item">
           <span class="ribbon-label">Proteína</span>
-          <span class="ribbon-value text-emerald" id="ribbonProt">0g / 220g</span>
+          <span class="ribbon-value" id="ribbonProt">0g / 220g</span>
         </div>
         <div class="ribbon-item">
           <span class="ribbon-label">Água</span>
@@ -91,8 +90,8 @@
           <span class="ribbon-value text-muted" id="ribbonCardio">Pendente</span>
         </div>
         <div class="ribbon-item">
-          <span class="ribbon-label">Musculação</span>
-          <span class="ribbon-value text-amber" id="ribbonGym">Pendente</span>
+          <span class="ribbon-label">Treino</span>
+          <span class="ribbon-value" id="ribbonGym">Pendente</span>
         </div>
       </div>
     </section>
@@ -112,7 +111,6 @@
           <li>
             <label class="toggle-item">
               <span class="toggle-item__info">
-                <span class="toggle-item__icon text-amber">🏋️</span>
                 <span><strong>Musculação</strong><small>Treino de força (45–60 min)</small></span>
               </span>
               <input type="checkbox" class="check" id="chk-gym">
@@ -121,7 +119,6 @@
           <li>
             <label class="toggle-item">
               <span class="toggle-item__info">
-                <span class="toggle-item__icon text-violet">🏃</span>
                 <span><strong>Cardio</strong><small>45–50 min · inclinação 3–6% · ~130 bpm</small></span>
               </span>
               <input type="checkbox" class="check" id="chk-cardio">
@@ -130,7 +127,6 @@
           <li class="water-card">
             <div class="water-card__head">
               <div class="toggle-item__info">
-                <span class="toggle-item__icon text-cyan">💧</span>
                 <span><strong>Água</strong><small>Meta diária de hidratação</small></span>
               </div>
               <div class="water-card__value">
@@ -149,7 +145,6 @@
           <li>
             <label class="toggle-item">
               <span class="toggle-item__info">
-                <span class="toggle-item__icon text-emerald">🚫</span>
                 <span><strong>Zero açúcar refinado e álcool</strong><small>Foco no déficit calórico</small></span>
               </span>
               <input type="checkbox" class="check" id="chk-clean">
@@ -247,25 +242,21 @@
     <!-- VIEW: DICAS -->
     <section data-view="tips" class="grid grid--2" hidden style="margin-top:20px">
       <article class="card tip-card">
-        <div class="tip-icon text-emerald">🍗</div>
         <h3>Proteína e massa magra</h3>
         <p>Mire em <strong>2,0 a 2,2 g de proteína por kg</strong> de peso-alvo (~220 g/dia). Proteína alta ajuda a preservar músculo durante o déficit.</p>
       </article>
 
       <article class="card tip-card">
-        <div class="tip-icon text-violet">🏃</div>
         <h3>Cardio na esteira inclinada</h3>
         <p><strong>45 a 50 min</strong>, inclinação 3–6%, 4,5–5,5 km/h. Impacto baixo protege os joelhos com o peso inicial.</p>
       </article>
 
       <article class="card tip-card">
-        <div class="tip-icon text-cyan">💧</div>
         <h3>Hidratação consistente</h3>
         <p>Distribua <strong>4 litros ao longo do dia</strong>, não tudo de uma vez. Ajuda na saciedade e no desempenho do treino.</p>
       </article>
 
       <article class="card tip-card">
-        <div class="tip-icon text-amber">🍚</div>
         <h3>Refeed programado</h3>
         <p>A cada 1–2 semanas de déficit, uma refeição com carboidratos limpos (arroz, batata, aveia) pode <strong>melhorar a adesão</strong> à dieta e o rendimento no treino.</p>
         <p>Evidência sobre "reativar tireoide e leptina" é limitada; não é garantia de queima de gordura.</p>

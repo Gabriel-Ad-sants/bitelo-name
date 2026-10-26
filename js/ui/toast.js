@@ -19,3 +19,12 @@ export function toast(message, tone = 'success') {
     node.addEventListener('transitionend', () => node.remove(), { once: true });
   }, DURATION_MS);
 }
+
+/** Feedback tátil leve no celular (ignorado onde não há suporte). */
+export function haptic(ms = 12) {
+  try {
+    navigator.vibrate?.(ms);
+  } catch {
+    /* sem suporte: nada a fazer */
+  }
+}

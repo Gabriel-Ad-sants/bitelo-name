@@ -1,6 +1,7 @@
 import { WORKOUT_SPLIT } from '../constants/plan.js';
 import { commit, setUi } from '../state/store.js';
 import { $, escapeHtml } from '../utils/dom.js';
+import { haptic } from '../ui/toast.js';
 
 const checkKey = (dayIdx, exIdx, dateISO) => `${dayIdx}-${exIdx}-${dateISO}`;
 
@@ -52,6 +53,7 @@ export function bind() {
     commit((draft) => {
       draft.workoutCompletions[key] = input.checked;
     });
+    haptic();
   });
 }
 

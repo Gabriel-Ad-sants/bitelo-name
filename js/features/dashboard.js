@@ -33,7 +33,9 @@ export function render(state) {
 
   setText('dashCurrentWeight', formatNumber(current));
   setText('dashProgressPct', `${formatNumber(pct)}%`);
-  $('#dashProgressBar').style.width = `${pct}%`;
+  const ring = $('#ringBar');
+  ring.style.strokeDashoffset = `${100 - pct}`;
+  ring.style.opacity = pct > 0 ? '1' : '0';
   setText('dashRemaining', `Faltam ${formatNumber(Math.max(0, current - TARGET_WEIGHT))} kg`);
 
   const avg = movingAverage(logs);

@@ -3,7 +3,7 @@ import { commit, getUi, setUi } from '../state/store.js';
 import { ensureDay, createEmptyDay } from '../services/storage.js';
 import { isISODate, todayISO, formatBR } from '../utils/dates.js';
 import { $, escapeHtml, formatNumber } from '../utils/dom.js';
-import { toast } from '../ui/toast.js';
+import { toast, haptic } from '../ui/toast.js';
 
 const FLAG_IDS = ['gym', 'cardio', 'clean'];
 const WATER_TARGET_ML = DAILY_TARGETS.waterLiters * 1000;
@@ -75,6 +75,7 @@ function bindFlags() {
         ensureDay(draft, selectedDate)[flag] = event.target.checked;
       });
       if (!ok) toast('Falha ao salvar. Armazenamento cheio?', 'error');
+      else haptic();
     });
   });
 }
@@ -89,6 +90,7 @@ function bindWater() {
         day.waterMl = Math.min(10000, Math.max(0, day.waterMl + delta));
       });
       if (!ok) toast('Falha ao salvar a água.', 'error');
+      else haptic();
     });
   });
 }

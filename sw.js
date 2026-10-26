@@ -3,7 +3,7 @@
  * Para publicar uma nova versão: aumente CACHE_VERSION (ex.: v1.0.1).
  * Assim o cache antigo é removido no activate.
  */
-const CACHE_VERSION = 'bitelo-v1.0.1';
+const CACHE_VERSION = 'bitelo-v1.0.3';
 
 const APP_SHELL = [
   './',
